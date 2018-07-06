@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+#! -*- encoding: utf8 -*-
+
+import pickle
+import sys
+import random
+
+def generar_frase(dic):
+	sentence=['$']
+	
+	for n in range(40):
+		frec = dic[sentence[-1]][0]
+		siguientes = dic[sentence[-1]][1]
+		num = random.randint(1,frec)
+		x = 0
+		for i in siguientes:
+			if num <= x+i[1]:
+				word=i[0]
+				break
+			else:
+				x+=i[1]
+		sentence.append(word)
+		if word == '$':
+			break
+	sentence = sentence[1:-1]
+	return ' '.join(sentence)
+			
+		
+
+def monoevo(dic,n):
+	res=''
+	for i in range(int(n)):
+		res+=generar_frase(dic)+'\n'
+	return res
+	
+
+if __name__ == "__main__":
+	if len(sys.argv) != 3:
+		print ("Numero de argumentos incorrecto")
+	else:
+		my_dic=pickle.load(open(sys.argv[1],'rb'))
+		print(monoevo(my_dic,sys.argv[2]))
